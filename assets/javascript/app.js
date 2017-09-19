@@ -1,8 +1,12 @@
 var shows = ["Seinfeld", "Friends", "The Simpsons", "Happy Days", "Parks and Recreation", "Bob's Burgers", "I Love Lucy", "The Office"];
 
+// Function to display 10 gifs of a certain show, depending on which button is clicked
 function displayGif() {
     var show = $(this).attr("data-name");
     var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + show + "&api_key=e72cc56b231c4da8a28ab54630c2c373&limit=10";
+    var dataStill;
+    var dataAnimate;
+    var pStill;
 
     $.ajax({
         url: queryURL,
@@ -15,21 +19,20 @@ function displayGif() {
             var pRating = $("<p>").text("Rating: " + rating);
             gifDiv.append(pRating);
 
-            var dataStill = response.data[j].images.original_still.url;
-            var dataAnimate = response.data[j].images.downsized.url;
-            var pStill = $("<img>").attr({"src": dataStill, "data-still": dataStill, "data-animate": dataAnimate,});
+            dataStill = response.data[j].images.original_still.url;
+            dataAnimate = response.data[j].images.downsized.url;
+            pStill = $("<img>").attr({"src": dataStill, "data-still": dataStill, "data-animate": dataAnimate, "data-state": "still"});
             gifDiv.append(pStill);
 
             console.log(response);
-            console.log(dataStill);
-            console.log(dataAnimate);
+            console.log(pStill);
         }
 
         $("#tv-shows").prepend(gifDiv);
     });
 }
 
-
+    // Function to create new button when the user enters a title into the form and clicks submit
     function renderButtons() {
         $("#tv-buttons").empty();
 
@@ -53,21 +56,23 @@ function displayGif() {
 
 
     $(document).on("click", ".gif-button", displayGif);
-    $(document).on("click", ".gif", pausePlay);
+    $(document).on("click", "img", pausePlay);
 
-function pausePlay(event) {
-    var state = $(this).attr("data-state");
 
-    console.log(state);
+    // Clicking a gif pauses or plays it ========== not working
+    function pausePlay(event) {
+        var state = $(this).attr("data-state");
 
-    if (state === "still") {
-        $(this).attr("src", $(this).attr("data-animate"));
-        $(this).attr("data-state", "animate");
-    } else {
-        $(this).attr("src", $(this).attr("data-still"));
-        $(this).attr("data-state", "still");
+        console.log(state);
+
+        if (state === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+        } else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+        }
     }
-}
 
     renderButtons();
 
