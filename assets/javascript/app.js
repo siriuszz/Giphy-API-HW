@@ -54,12 +54,14 @@ function displayGif() {
         });
 
 
-
+    // Clicking on a button displays the gif array for that show
     $(document).on("click", ".gif-button", displayGif);
+
+    // Clicking a gif pauses or plays it
     $(document).on("click", "img", pausePlay);
 
 
-    // Clicking a gif pauses or plays it ========== not working
+    // Function for pause/play
     function pausePlay(event) {
         var state = $(this).attr("data-state");
 
